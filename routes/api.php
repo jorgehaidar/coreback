@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\security\RateLimitBlockController;
 use App\Http\Controllers\security\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,7 +11,7 @@ Route::get('/', function () {
 
 Route::group([
 
-    'middleware' => 'api',
+    'middleware' => ['api'],
     'prefix' => 'auth'
 
 ], function ($router) {
@@ -22,7 +23,13 @@ Route::group([
 
 });
 
+Route::middleware(['access.control', 'auth.control'])->group(function () {
+    Route::get('/rate-limits', [RateLimitBlockController::class, 'index']);
+    Route::delete('/rate-limits/{key}', [RateLimitBlockController::class, 'destroy']);
+});
 
-Route::middleware('api')->group(function () {
+
+
+Route::middleware(['api', 'throttle:api'])->group(function () {
     Route::resource('user', UserController::class);
 });
