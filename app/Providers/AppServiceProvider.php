@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\security\RateLimitBlock;
+use App\Models\Security\RateLimitBlock;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Http\Request;

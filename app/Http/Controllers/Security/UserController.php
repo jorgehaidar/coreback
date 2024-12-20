@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\security;
+namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\CoreController;
-use App\Models\security\User;
-use App\Services\security\UserService;
+use App\Models\Security\User;
+use App\Services\Security\UserService;
 
 class UserController extends CoreController
 {

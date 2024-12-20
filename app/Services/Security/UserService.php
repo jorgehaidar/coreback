@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\security;
+namespace App\Services\Security;
 
-use App\Models\security\User;
+use App\Models\Security\User;
 use App\Services\CoreService;
 
 class UserService extends CoreService
