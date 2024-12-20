@@ -3,6 +3,7 @@
 use App\Http\Controllers\Security\AuthController;
 use App\Http\Controllers\Security\RateLimitBlockController;
 use App\Http\Controllers\Security\UserController;
+use App\Http\Controllers\Security\LogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,5 +32,6 @@ Route::middleware(['access.control', 'auth.control'])->group(function () {
 
 
 Route::middleware(['api', 'throttle:api'])->group(function () {
-    Route::resource('user', UserController::class);
+    Route::resource('users', UserController::class);
+    Route::Resource('logs', LogController::class);
 });

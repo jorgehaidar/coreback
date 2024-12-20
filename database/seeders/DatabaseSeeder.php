@@ -20,20 +20,7 @@ class DatabaseSeeder extends Seeder
 //        $this->call(RoutesSeeder::class);
 
         $models = [
-//            User::class,
-//            Role::class,
-//            Theater::class,
-//            Hall::class,
-//            Section::class,
-//            RoleUser::class,
-//            Event::class,
-//            EventShow::class,
-//            Priority::class,
-//            Contact::class,
-//            Email::class,
-//            Phone::class,
-//            Application::class,
-//            ApplicationContact::class
+//
         ];
 
         foreach ($models as $model){

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Contracts\HasValidationRules;
+use App\Services\Security\LogService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -89,5 +90,25 @@ class CoreModel extends Model implements HasValidationRules
             }
             return $rule;
         }, $rules);
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::updated(function (CoreModel $model) {
+            if ($model->getTable() != 'logs') {
+                LogService::createAny('Actualizado', $model->getTable(), $model->getKey());
+            }
+        });
+        static::created(function (CoreModel $model) {
+            if ($model->getTable() != 'logs') {
+                LogService::createAny('Creado', $model->getTable(), $model->getKey());
+            }
+        });
+        static::deleted(function (CoreModel $model) {
+            if ($model->getTable() != 'logs') {
+                LogService::createAny('Eliminado', $model->getTable(), $model->getKey());
+            }
+        });
     }
 }
