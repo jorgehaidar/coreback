@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\security\RateLimitBlockController;
-use App\Http\Controllers\security\UserController;
+use App\Http\Controllers\Security\AuthController;
+use App\Http\Controllers\Security\RateLimitBlockController;
+use App\Http\Controllers\Security\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
