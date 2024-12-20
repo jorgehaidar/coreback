@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Services{{ module }};
+
+use App\Services\CoreService;
+use App\Models\Security\{{ model }};
+
+class {{ model }}Service extends CoreService
+{
+    public function __construct()
+    {
+        $this->modelClass = resolve({{ model }}::class);
+    }
+}

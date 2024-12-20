@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models{{ module }};
+
+use App\Models\CoreModel;
+
+class {{ model }} extends CoreModel
+{
+
+    protected $fillable = [
+        //Insert data to masive fill
+    ];
+
+    public function rules($scenario = 'create'): array
+    {
+        $rules = [
+            'create' => [
+                //Insert rules to create
+            ],
+            'update' => [
+                //Insert rules to update
+            ],
+        ];
+        return $rules[$scenario] ?? [];
+    }
+}

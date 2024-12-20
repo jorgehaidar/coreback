@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Http\Controllers{{ module }};
+
+use App\Http\Controllers\CoreController;
+use App\Services{{ module }}\{{ model }}Service;
+
+class {{ model }}Controller extends CoreController
+{
+    public function __construct()
+    {
+        $this->service = new {{ model }}Service();
+    }
+}
