@@ -45,6 +45,7 @@ class MakeServiceCommand extends Command
         $this->createController($model);
         $this->createService($model);
         $this->updateApiRoutes($model);
+        $this->createJsonFile($model);
 
         $this->info("¡Servicio {$model} creado exitosamente!");
     }
@@ -169,6 +170,36 @@ class MakeServiceCommand extends Command
 
         $this->info("Ruta añadida a api.php: {$newRoute}");
     }
+
+    private function createJsonFile($model)
+    {
+        $module = '';
+        if (str_contains($model, '/')){
+            $explode = explode('/', $model);
+            $module = '\\'.$explode[0];
+            $model = $explode[1];
+        }
+
+        $tableName = Str::snake(Str::plural($model));
+
+        $dataPath = base_path("database/data");
+        $filePath = "{$dataPath}/{$tableName}.json";
+
+        if (!file_exists($dataPath)) {
+            mkdir($dataPath, 0755, true);
+        }
+
+        if (file_exists($filePath)) {
+            $this->info("El archivo JSON para la tabla {$tableName} ya existe: {$filePath}");
+            return;
+        }
+
+        $data = json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        file_put_contents($filePath, $data);
+
+        $this->info("Archivo JSON creado: {$filePath}");
+    }
+
 
     private function getStub($type)
     {

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Security\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -14,11 +15,69 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $totalStartTime = microtime(true);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+//        $this->call(RoutesSeeder::class);
+
+        $models = [
+//            User::class,
+//            Role::class,
+//            Theater::class,
+//            Hall::class,
+//            Section::class,
+//            RoleUser::class,
+//            Event::class,
+//            EventShow::class,
+//            Priority::class,
+//            Contact::class,
+//            Email::class,
+//            Phone::class,
+//            Application::class,
+//            ApplicationContact::class
+        ];
+
+        foreach ($models as $model){
+            $this->runSeeder($model);
+        }
+
+//        $this->call([PermissionSeeder::class]);
+
+        $totalExecutionTime = round((microtime(true) - $totalStartTime) * 1000, 2);
+        $this->command->info("<fg=green>  Total seeding time: {$totalExecutionTime} ms</>");
+    }
+
+    private function runSeeder(string $modelName): void
+    {
+        $model = resolve($modelName);
+        $startTime = microtime(true);
+        $padding = 140;
+
+        $message = "  Seeding {$model->getTable()} table";
+        $dots = str_repeat('.', $padding - strlen($message));
+        $this->command->getOutput()->write("{$message}");
+        $this->command->getOutput()->write("<fg=gray>{$dots}</>");
+        $this->command->getOutput()->write(' <fg=yellow>RUNNING</>');
+
+        $json = File::get("database/data/{$model->getTable()}.json");
+        $data = json_decode($json, true);
+
+        foreach ($data as $obj) {
+            $model::query()->create($obj);
+        }
+
+        $executionTime = round((microtime(true) - $startTime) * 1000);
+
+        $this->command->line('');
+        $message = "  Seeding {$model->getTable()} table";
+
+        $dots = str_repeat('.', $padding - strlen($message) - strlen($executionTime));
+
+        $this->command->getOutput()->write("{$message}");
+        $this->command->getOutput()->write("<fg=gray>{$dots}</>");
+        $this->command->getOutput()->write("<fg=gray>{$executionTime} ms</>");
+        $this->command->getOutput()->write('<fg=green> DONE</>');
+
+        $this->command->line('');
+        $this->command->line('');
     }
 }
