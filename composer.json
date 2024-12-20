@@ -46,7 +46,23 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"
+            "@php artisan migrate --graceful --ansi",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-install-cmd": [
+            "echo 'Ejecutando: php artisan migrate'",
+            "@php artisan migrate",
+            "echo 'Ejecutando: php artisan key:generate'",
+            "@php artisan key:generate",
+            "echo 'Ejecutando: php artisan jwt:secret'",
+            "@php artisan jwt:secret",
+            "echo 'Ejecutando: php artisan cache:clear'",
+            "@php artisan cache:clear",
+            "echo 'Ejecutando: php artisan storage:link'",
+            "@php artisan storage:unlink",
+            "@php artisan storage:link",
+            "echo 'Ejecutando: php artisan db:seed'",
+            "@php artisan db:seed"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
