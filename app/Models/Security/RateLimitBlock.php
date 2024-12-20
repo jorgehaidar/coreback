@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\security;
+namespace App\Models\Security;
 
 use App\Models\CoreModel;
 use Illuminate\Database\Eloquent\Model;

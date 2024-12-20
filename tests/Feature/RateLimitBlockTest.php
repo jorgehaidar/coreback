@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\security\RateLimitBlock;
+use App\Models\Security\RateLimitBlock;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
