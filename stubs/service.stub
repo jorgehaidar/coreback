@@ -3,7 +3,7 @@
 namespace App\Services{{ module }};
 
 use App\Services\CoreService;
-use App\Models\Security\{{ model }};
+use App\Models{{ module }}\{{ model }};
 
 class {{ model }}Service extends CoreService
 {
