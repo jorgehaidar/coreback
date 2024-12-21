@@ -14,7 +14,14 @@ class MakeServiceCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'make:service {name}';
+    protected $signature = 'make:service {name}
+                            {--a|all : Crear todos los archivos (modelo, controlador, migración, servicio)}
+                            {--m|model : Crear solo el modelo}
+                            {--c|controller : Crear solo el controlador}
+                            {--s|service : Crear solo el servicio}
+                            {--t|migration : Crear solo la migración}
+                            {--p|api : Crear solo la actualización de la api}
+                            {--e|seeder : Crear solo el archivo de seeder}';
 
     /**
      * The console command description.
@@ -40,12 +47,23 @@ class MakeServiceCommand extends Command
         $model = Str::studly($this->argument('name'));
         $this->info("Creando componentes para el servicio: {$model}");
 
-        $this->createMigration($model);
-        $this->createModel($model);
-        $this->createController($model);
-        $this->createService($model);
-        $this->updateApiRoutes($model);
-        $this->createJsonFile($model);
+        if  ($this->option('all') || $this->option('migration'))
+            $this->createMigration($model);
+
+        if ($this->option('all') || $this->option('model'))
+            $this->createModel($model);
+
+        if ($this->option('all') || $this->option('controller'))
+            $this->createController($model);
+
+        if ($this->option('all') || $this->option('service'))
+            $this->createService($model);
+
+        if ($this->option('all') || $this->option('api'))
+            $this->updateApiRoutes($model);
+
+        if ($this->option('all') || $this->option('seeder'))
+            $this->createJsonFile($model);
 
         $this->info("¡Servicio {$model} creado exitosamente!");
     }
