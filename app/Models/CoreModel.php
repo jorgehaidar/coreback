@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @method static create(array $params)
  * @method static find(string $id)
+ * @method static updateOrCreate(array $array, mixed $modelData)
  */
 class CoreModel extends Model implements HasValidationRules
 {

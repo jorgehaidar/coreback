@@ -28,7 +28,7 @@ class Log extends CoreModel
     {
         $rules = [
             'create' => [
-                'users_id' => 'required|integer|exists:users,id',
+                'users_id' => 'nullable|integer|exists:users,id',
                 'date_time' => 'required|date',
                 'action_name' => 'required|max:255',
                 'ip' => 'required|max:16',
@@ -36,7 +36,7 @@ class Log extends CoreModel
                 'table_name' => 'required|max:255'
             ],
             'update' => [
-                'users_id' => 'required|integer|exists:users,id',
+                'users_id' => 'nullable|integer|exists:users,id',
                 'date_time' => 'required|date',
                 'action_name' => 'required|max:255',
                 'ip' => 'required|max:16',

@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logs', function (Blueprint $table) {
+        Schema::create('routes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('users_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->dateTime('date_time');
-            $table->string('action_name');
-            $table->string('ip');
-            $table->string('record');
-            $table->string('table_name');
+            $table->string('menu_module');
+            $table->string('module');
+            $table->string('action');
+            $table->string('route');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('routes');
     }
 };
