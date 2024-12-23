@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Security\Role;
+use App\Models\Security\RoleUser;
 use App\Models\Security\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
@@ -22,7 +23,8 @@ class DatabaseSeeder extends Seeder
 
         $models = [
             User::class,
-            Role::class
+            Role::class,
+            RoleUser::class
         ];
 
         foreach ($models as $model){

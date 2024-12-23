@@ -9,6 +9,8 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -38,6 +40,17 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
         'password',
     ];
 
+    protected $relations = ['roles', 'logs'];
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(Log::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
