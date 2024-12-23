@@ -17,7 +17,7 @@ class LogService extends CoreService
     static public function createLoginLogout($action)
     {
         $model = Log::create([
-            'users_id' => auth()->check() ? auth()->user()->id : 1,
+            'user_id' => auth()->check() ? auth()->user()->id : 1,
             'date_time' => Carbon::now(),
             'action_name' => $action,
             'ip' => \request()->ip(),
@@ -37,7 +37,7 @@ class LogService extends CoreService
     static public function createAny($action, $table_name, $record)
     {
         $model = Log::create([
-            'users_id' => auth()->check() ? auth()->user()->id : null,
+            'user_id' => auth()->check() ? auth()->user()->id : null,
             'date_time' => Carbon::now(),
             'action_name' => $action,
             'ip' => \request()->ip(),

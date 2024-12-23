@@ -16,7 +16,7 @@ class Log extends CoreModel
     }
 
     protected $fillable = [
-        'users_id',
+        'user_id',
         'date_time',
         'action_name',
         'ip',
@@ -28,7 +28,7 @@ class Log extends CoreModel
     {
         $rules = [
             'create' => [
-                'users_id' => 'nullable|integer|exists:users,id',
+                'user_id' => 'nullable|integer|exists:users,id',
                 'date_time' => 'required|date',
                 'action_name' => 'required|max:255',
                 'ip' => 'required|max:16',
@@ -36,7 +36,7 @@ class Log extends CoreModel
                 'table_name' => 'required|max:255'
             ],
             'update' => [
-                'users_id' => 'nullable|integer|exists:users,id',
+                'user_id' => 'nullable|integer|exists:users,id',
                 'date_time' => 'required|date',
                 'action_name' => 'required|max:255',
                 'ip' => 'required|max:16',
