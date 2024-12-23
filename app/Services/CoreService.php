@@ -46,7 +46,7 @@ abstract class CoreService
         return $query;
     }
 
-    protected function setRelations(Builder $query, array $relation): Builder
+    protected function setRelations(Builder $query, array|string $relation): Builder
     {
         if (is_array($relation)) {
             foreach ($relation as $relationItem) {
