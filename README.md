@@ -26,7 +26,8 @@
 ---
 ### Autenticacion
 
-#### Usuario email:`admin@back_core.com` password:`adminfindall`
+#### Usuario email:`admin@backcore.com` password:`admin`
+#### Usuario email:`cliente@backcore.com` password:`cliente`
 
 ---
 ### Comandos Utiles
