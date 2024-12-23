@@ -118,4 +118,22 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
             ->where(['name' => 'admin'])
             ->exists();
     }
+
+    public function getPermissions()
+    {
+        $permissions = $this->roles()
+            ->with('routes')
+            ->get()
+            ->flatMap(function ($role) {
+                return $role->routes;
+            });
+
+        return $permissions->groupBy('menu_module')
+            ->map(function ($moduleGroup) {
+                return $moduleGroup->groupBy('module')
+                    ->map(function ($actionGroup) {
+                        return $actionGroup->pluck('action');
+                    });
+            });
+    }
 }
