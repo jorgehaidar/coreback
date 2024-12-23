@@ -52,7 +52,7 @@ class CoreModel extends Model implements HasValidationRules
 //protected $guarded = [];
 
 //Define los atributos que no van a ser recuperados
-//    protected $hidden = [];
+    protected $hidden = ['pivot'];
 
 //Define las relaciones que tiene el modelo
 //protected $relations = [];
