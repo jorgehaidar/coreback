@@ -35,3 +35,6 @@ Route::middleware(['api', 'throttle:api'])->group(function () {
     Route::resource('users', UserController::class);
     Route::Resource('logs', LogController::class);
 });
+
+use App\Http\Controllers\Security\RoleController;
+Route::Resource('roles', RoleController::class);

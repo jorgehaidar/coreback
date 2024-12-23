@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "administrador",
+        "description": "Tiene acceso completo y control sobre el sistema, incluyendo la gestión de usuarios, permisos y configuraciones del sistema.",
+        "active": true
+    },
+    {
+        "id": 2,
+        "name": "cliente",
+        "description": "Tiene permisos para gestionar aspectos específicos del sistema.",
+        "active": true
+    }
+]
