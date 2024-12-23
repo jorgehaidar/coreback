@@ -13,7 +13,7 @@ class SyncRoutes extends Command
      *
      * @var string
      */
-    protected $signature = 'sync:routes';
+    protected $signature = 'route:sync';
 
     /**
      * The console command description.
