@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "name": "SuperAdmin",
+        "email": "admin@backcore.com",
+        "email_verified_at": "2024-12-22",
+        "password": "admin"
+    },
+    {
+        "id": 2,
+        "name": "Cliente",
+        "email": "cliente@backcore.com",
+        "email_verified_at": "2024-12-22",
+        "password": "cliente"
+    }
+]

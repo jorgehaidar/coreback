@@ -66,12 +66,12 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
         $rules = [
             'create' => [
                 'name' => 'required|string',
-                'email' => 'required|string',
+                'email' => 'required|email|max:255|unique:users,email',
                 'password' => 'required',
             ],
             'update' => [
                 'name' => 'required|string',
-                'email' => 'required|string',
+                'email' => 'required|email|max:255|unique:users,email,'.$this->id,
                 'password' => 'required',
             ],
         ];
