@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Security\Role;
 use App\Models\Security\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
@@ -20,7 +21,8 @@ class DatabaseSeeder extends Seeder
 //        $this->call(RoutesSeeder::class);
 
         $models = [
-//
+            User::class,
+            Role::class
         ];
 
         foreach ($models as $model){
@@ -49,7 +51,7 @@ class DatabaseSeeder extends Seeder
         $data = json_decode($json, true);
 
         foreach ($data as $obj) {
-            $model::query()->create($obj);
+            $model::query()->updateOrCreate(['id' => $obj['id']], $obj);
         }
 
         $executionTime = round((microtime(true) - $startTime) * 1000);
