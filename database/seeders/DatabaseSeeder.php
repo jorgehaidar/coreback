@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Security\Permission;
 use App\Models\Security\Role;
 use App\Models\Security\RoleUser;
 use App\Models\Security\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -19,19 +21,19 @@ class DatabaseSeeder extends Seeder
     {
         $totalStartTime = microtime(true);
 
-//        $this->call(RoutesSeeder::class);
+        Artisan::call('route:sync');
 
         $models = [
             User::class,
             Role::class,
-            RoleUser::class
+            RoleUser::class,
         ];
 
         foreach ($models as $model){
             $this->runSeeder($model);
         }
 
-//        $this->call([PermissionSeeder::class]);
+        $this->call([PermissionSeeder::class]);
 
         $totalExecutionTime = round((microtime(true) - $totalStartTime) * 1000, 2);
         $this->command->info("<fg=green>  Total seeding time: {$totalExecutionTime} ms</>");
