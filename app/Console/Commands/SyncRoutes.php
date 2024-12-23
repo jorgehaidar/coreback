@@ -33,12 +33,18 @@ class SyncRoutes extends Command
                 'module' => $this->getModule($route->action['controller'] ?? null),
                 'action' => $this->getAction($route->action['controller'] ?? null),
                 'route' => $route->uri,
+                'method' => $route->methods[0]
             ];
         });
 
         foreach ($routes as $routeData) {
-            if (isset($routeData['menu_module'])){
-                Route::updateOrCreate(['route' => $routeData['route']], $routeData);
+            if (isset($routeData['menu_module']) && $routeData['action'] !== 'create' && $routeData['action'] !== 'edit'){
+                Route::updateOrCreate(
+                    [
+                        'route' => $routeData['route'],
+                        'method' => $routeData['method']
+                    ]
+                    ,$routeData);
             }
         }
 

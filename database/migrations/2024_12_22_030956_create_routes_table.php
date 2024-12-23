@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('menu_module');
             $table->string('module');
             $table->string('action');
+            $table->string('method');
             $table->string('route');
             $table->boolean('active')->default(true);
             $table->timestamps();

@@ -12,6 +12,7 @@ class Route extends CoreModel
         'menu_module',
         'module',
         'route',
+        'method',
         'action',
         'active'
     ];
@@ -23,6 +24,7 @@ class Route extends CoreModel
                 'menu_module' => 'required|max:255',
                 'module' => 'required|max:255',
                 'action' => 'required|max:255',
+                'method' => 'required|max:255',
                 'route' => 'required|max:255',
                 'active' => 'required|boolean'
             ],
@@ -30,6 +32,7 @@ class Route extends CoreModel
                 'menu_module' => 'required|max:255',
                 'module' => 'required|max:255',
                 'action' => 'required|max:255',
+                'method' => 'required|max:255',
                 'route' => 'required|max:255',
                 'active' => 'required|boolean'
             ],
