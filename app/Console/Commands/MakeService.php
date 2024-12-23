@@ -11,7 +11,7 @@ class MakeService extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * All options are executed by default
      * @var string
      */
     protected $signature = 'make:service {name}
@@ -35,8 +35,8 @@ class MakeService extends Command
 
     public function __construct(Filesystem $files)
     {
-            parent::__construct();
-            $this->files = $files;
+        parent::__construct();
+        $this->files = $files;
     }
 
     /**
@@ -46,6 +46,17 @@ class MakeService extends Command
     {
         $model = Str::studly($this->argument('name'));
         $this->info("Creando componentes para el servicio: {$model}");
+
+        if (
+            !$this->option('model') &&
+            !$this->option('controller') &&
+            !$this->option('service') &&
+            !$this->option('migration') &&
+            !$this->option('api') &&
+            !$this->option('seeder')
+        ){
+            $this->input->setOption('all', true);
+        }
 
         if  ($this->option('all') || $this->option('migration'))
             $this->createMigration($model);
