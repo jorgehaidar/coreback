@@ -110,4 +110,11 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
             })
             ->exists();
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->roles()
+            ->where(['name' => 'admin'])
+            ->exists();
+    }
 }
