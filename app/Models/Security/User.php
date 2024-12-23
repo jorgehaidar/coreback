@@ -3,6 +3,7 @@
 namespace App\Models\Security;
 
 use App\Models\CoreModel;
+use App\Rules\StrongPassword;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -76,12 +77,12 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
             'create' => [
                 'name' => 'required|string',
                 'email' => 'required|email|max:255|unique:users,email',
-                'password' => 'required',
+                'password' => ['required', new StrongPassword()],
             ],
             'update' => [
                 'name' => 'required|string',
                 'email' => 'required|email|max:255|unique:users,email,'.$this->id,
-                'password' => 'required',
+                'password' => ['required', new StrongPassword()],
             ],
         ];
 
