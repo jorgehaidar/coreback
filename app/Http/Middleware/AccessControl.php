@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Security\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AccessControl
@@ -15,6 +17,17 @@ class AccessControl
      */
     public function handle(Request $request, Closure $next): Response
     {
+        /** @var User $user */
+        $user = Auth::user();
+        $currentRoute = $request->path();
+        $currentMethod = $request->method() === 'PATCH' ? 'PUT' : $request->method();
+
+        if (!$user->hasAccessToRoute($currentRoute, $currentMethod)){
+            return response()->json([
+                'error' => 'You do not have access to route',
+            ], RESPONSE::HTTP_FORBIDDEN);
+        }
+
         return $next($request);
     }
 }

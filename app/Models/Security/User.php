@@ -40,6 +40,11 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
         'password',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $relations = ['roles', 'logs'];
 
     public function roles(): BelongsToMany
@@ -51,15 +56,6 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
     {
         return $this->hasMany(Log::class);
     }
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
 
     /**
      * Get the attributes that should be cast.
@@ -101,5 +97,17 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function hasAccessToRoute(string $currentRoute, string $currentMethod): bool
+    {
+        return $this->roles()
+            ->whereHas('routes', function ($query) use ($currentRoute, $currentMethod){
+                $query->where([
+                    'route' => $currentRoute,
+                    'method' => $currentMethod
+                ]);
+            })
+            ->exists();
     }
 }
