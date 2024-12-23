@@ -19,7 +19,7 @@ class MakeServiceCommand extends Command
                             {--m|model : Crear solo el modelo}
                             {--c|controller : Crear solo el controlador}
                             {--s|service : Crear solo el servicio}
-                            {--t|migration : Crear solo la migración}
+                            {--i|migration : Crear solo la migración}
                             {--p|api : Crear solo la actualización de la api}
                             {--e|seeder : Crear solo el archivo de seeder}';
 
