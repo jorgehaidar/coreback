@@ -203,7 +203,7 @@ abstract class CoreService
         }
     }
 
-    public function update($id, array $params): array
+    public function update(string $id, array $params): array
     {
         /** @var CoreModel $model */
         $model = $this->modelClass::find($id);
