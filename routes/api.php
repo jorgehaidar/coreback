@@ -13,14 +13,21 @@ Route::get('/', function () {
 
 Route::group([
 
-    'middleware' => ['api'],
+    'middleware' => ['api', 'auth.control'],
     'prefix' => 'auth'
 
 ], function ($router) {
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth.control']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+    Route::post('get-permissions', [AuthController::class, 'getPermissions']);
+    Route::post('change-password', [AuthController::class, 'changePassword']);
+
+    //Recovery password
+    Route::post('restore-password', [AuthController::class, 'sendRecoveryEmail'])->withoutMiddleware('auth.control');
+    Route::post('validate-code', [AuthController::class, 'validateCode'])->withoutMiddleware('auth.control');
+    Route::post('restore-password/{hash}', [AuthController::class, 'reset'])->withoutMiddleware('auth.control');
 });
 
 Route::middleware(['auth.control', 'access.control'])->group(function () {
