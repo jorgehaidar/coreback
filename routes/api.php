@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Security\AuthController;
+use App\Http\Controllers\Security\EmailVerificationController;
 use App\Http\Controllers\Security\RateLimitBlockController;
 use App\Http\Controllers\Security\RouteController;
 use App\Http\Controllers\Security\UserController;
@@ -29,12 +30,17 @@ Route::group([
     Route::post('restore-password', [AuthController::class, 'sendRecoveryEmail'])->withoutMiddleware('auth.control');
     Route::post('validate-code', [AuthController::class, 'validateCode'])->withoutMiddleware('auth.control');
     Route::post('restore-password/{hash}', [AuthController::class, 'reset'])->withoutMiddleware('auth.control');
+
+    //Email verification
+    Route::post('email/send-verification', [EmailVerificationController::class, 'sendVerificationEmail'])->name('verification.notice');
+    Route::post('email/verify/{id}/{hash}', [EmailVerificationController::class, 'verifyEmail'])->name('verification.verify');
 });
 
 Route::middleware([
     'api',
     'throttle:api',
     'auth.control',
+    'verified',
     'access.control'
 ])->group(function () {
     Route::get('/rate-limits', [RateLimitBlockController::class, 'index']);

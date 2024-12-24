@@ -123,4 +123,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Frontend URL
+    |--------------------------------------------------------------------------
+    |
+    | This configuration option determines the base URL of your frontend
+    | application. It is primarily used for generating links or URLs that
+    | point to your frontend, such as email verification links or redirects
+    | after authentication. Ensure that the URL is correctly set to match
+    | your frontend environment.
+    |
+    | Example: https://frontend.example.com
+    |
+    */
+
+    'frontend_url' => env('APP_FRONTEND_URL', 'http://localhost'),
 ];

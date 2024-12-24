@@ -3,6 +3,7 @@
 namespace App\Models\Security;
 
 use App\Models\CoreModel;
+use App\Notifications\CustomVerifyEmail;
 use App\Rules\StrongPassword;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
@@ -19,7 +20,8 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 
 class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
     AuthenticatableContract,
-    AuthorizableContract
+    AuthorizableContract,
+    \Illuminate\Contracts\Auth\MustVerifyEmail
 {
     use
         HasFactory,
@@ -135,5 +137,10 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
                         return $actionGroup->pluck('action');
                     });
             });
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new CustomVerifyEmail());
     }
 }
