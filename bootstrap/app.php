@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AccessControl;
+use App\Http\Middleware\ApiKeyMiddleware;
 use App\Http\Middleware\AuthControl;
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\SecurityHeaders;
@@ -26,7 +27,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'access.control' => AccessControl::class,
             'auth.control' => AuthControl::class,
-            'verified' => EnsureEmailIsVerified::class
+            'verified' => EnsureEmailIsVerified::class,
+            'api.key' => ApiKeyMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

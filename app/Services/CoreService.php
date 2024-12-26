@@ -128,7 +128,7 @@ abstract class CoreService
         }
     }
 
-    public function getById(string $id, array $params): array
+    public function getById(string $id, array $params = []): array
     {
         try {
             $query = $this->processRequest($params);
