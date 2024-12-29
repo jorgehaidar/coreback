@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\Handler;
 use App\Http\Middleware\AccessControl;
 use App\Http\Middleware\ApiKeyMiddleware;
 use App\Http\Middleware\AuthControl;
@@ -32,5 +33,4 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
     })->create();

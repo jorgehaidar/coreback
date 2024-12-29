@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\Security\ApiKeyController;
 use App\Http\Controllers\Security\AuthController;
 use App\Http\Controllers\Security\EmailVerificationController;
+use App\Http\Controllers\Security\ErrorLogController;
+use App\Http\Controllers\Security\ExportController;
+use App\Http\Controllers\Security\LogController;
 use App\Http\Controllers\Security\RateLimitBlockController;
+use App\Http\Controllers\Security\RoleController;
 use App\Http\Controllers\Security\RouteController;
 use App\Http\Controllers\Security\UserController;
-use App\Http\Controllers\Security\RoleController;
-use App\Http\Controllers\Security\LogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,6 +40,7 @@ Route::group([
 });
 
 Route::middleware([
+    'api.key',
     'api',
     'throttle:api',
     'auth.control',
@@ -54,4 +58,10 @@ Route::middleware([
 
     Route::resource('routes', RouteController::class)->only('index', 'update');
 
+    Route::get('api-keys/generate/{id}', [ApiKeyController::class, 'generateApiKey']);
+    Route::Resource('api-keys', ApiKeyController::class);
 });
+
+Route::get('export', [ExportController::class, 'export']);
+
+Route::Resource('error-logs', ErrorLogController::class);
