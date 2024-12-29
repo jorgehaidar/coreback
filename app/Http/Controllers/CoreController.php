@@ -12,27 +12,25 @@ abstract class CoreController
 {
     protected CoreService $service;
 
+    /**
+     * @throws Throwable
+     */
     public function index(Request $request): JsonResponse
     {
-        try {
-            $params = $request->all();
+        $params = $request->all();
 
-            $result = $this->service->getAll($params);
+        $result = $this->service->getAll($params);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Resources retrieved successfully.',
-                'data' => $result,
-            ], 200);
-        } catch (Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while retrieving the resources.',
-                'errors' => [$e->getMessage()],
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Resources retrieved successfully.',
+            'data' => $result,
+        ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function store(Request $request): JsonResponse
     {
         try {
@@ -50,30 +48,23 @@ abstract class CoreController
 
         } catch (Throwable $e) {
             DB::rollBack();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal Server Error.',
-                'errors' => [$e->getMessage()],
-            ], 500);
+            throw $e;
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     public function show(string $id, Request $request): JsonResponse
     {
-        try {
-            $params = $request->all();
-            $result = $this->service->getById($id, $params);
-            return response()->json($result, $result['status']);
-        } catch (Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while retrieving the resource.',
-                'errors' => [$e->getMessage()],
-            ], 500);
-        }
+        $params = $request->all();
+        $result = $this->service->getById($id, $params);
+        return response()->json($result, $result['status']);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function update(Request $request, string $id): JsonResponse
     {
         try {
@@ -91,41 +82,50 @@ abstract class CoreController
 
         } catch (Throwable $e) {
             DB::rollBack();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal Server Error.',
-                'errors' => [$e->getMessage()],
-            ], 500);
+            throw $e;
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     public function destroy(string $id): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $result = $this->service->deleteById($id);
-            return response()->json($result, $result['status']);
+
+            if ($result['success']) {
+                DB::commit();
+                return response()->json($result, 201);
+            }
+
+            DB::rollBack();
+            return response()->json($result, 400);
         } catch (Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while deleting the resource.',
-                'errors' => [$e->getMessage()],
-            ], 500);
+            DB::rollBack();
+            throw $e;
         }
     }
 
+    /**
+     * @throws Throwable
+     */
     public function deleteMultiple(Request $request): JsonResponse
     {
         try {
             $result = $this->service->deleteMultiple($request->all());
 
-            return response()->json($result, $result['status']);
+            if ($result['success']) {
+                DB::commit();
+                return response()->json($result, 201);
+            }
+
+            DB::rollBack();
+            return response()->json($result, 400);
         } catch (Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while deleting the resources.',
-                'errors' => [$e->getMessage()],
-            ], 500);
+            DB::rollBack();
+            throw $e;
         }
     }
 }
