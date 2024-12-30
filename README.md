@@ -11,11 +11,19 @@
 
 ### Tareas:
 
-- Crear migracion, modelo, controller, servicio y funcionalidad de trazas
-- Crear migracion, seeder, modelo, controller, servicio de Roles
-- Crear migracion, seeder, modelo, controller, servicio de Role_user
-- Crear migracion, seeder, modelo, controller, servicio de Permissions
-- Crear migracion, seeder, modelo, controller, servicio de Routes
+- ~~login~~
+- ~~logout~~
+- ~~me~~
+- ~~verificacion de admin~~
+- ~~obtencion de permisos~~
+- ~~cambiar contrasena~~
+- ~~restaurar contrasenna~~
+- ~~verificacion por email~~
+- ~~crear apikey~~
+- ~~Creacion del control de errores y envio por email al admin~~
+- ~~exportar~~
+- importar
+- crear el readme dev
 
 ### Variables de entorno
 #### 1-Crear un fichero `.env` a partir del fichero `env.environment` con los mismos datos
