@@ -171,16 +171,125 @@ The system provides extensive configuration options through environment variable
 The frontend sends a JSON payload to the backend to export model records in the following format:
 ```json
 {
-  "{module}\{model}": {
-    "columns": {
-      "column1": "pretty column 1",
-      "column2": "pretty column 2",
-      "relation.column1": "pretty column 3"
-    },
-    "ids": [1, 2, 3]
-  }
+    "{module}\\{model}": {
+        "columns": {
+            "column1": "pretty column 1",
+            "column2": "pretty column 2",
+            "relation.column1": "pretty column 3"
+        },
+        "ids": [1, 2, 3]
+    }
 }
 ```
+
+### Communication Parameters for Frontend/Backend 🌐💻🪧
+These parameters are sent from the frontend in requests for ```get_all``` and ```get_by_id```.
+
+### Relation
+All relations
+```json
+{
+    "relations": "all"
+}
+```
+
+Specific relation
+```json
+{
+    "relations": "relation1"
+}
+```
+
+Nested relations
+```json
+{
+    "relations": "relation1.subrelation"
+}
+```
+
+Multiple relations
+```json
+{
+    "relations": [
+        "relation1",
+        "relation2.subrelation",
+        "..."
+    ]
+}
+```
+
+### Order By
+Sort query result
+```json
+{
+    "orderBy": {
+        "column1": "asc",
+        "column2": "desc"
+    }
+}
+```
+
+### Select
+Retrieve specific columns
+```json
+{
+    "select": ["column1", "column2"]
+}
+```
+
+### Filtering
+Filter with or and and conditions
+```json
+{
+    "attr": {
+        "or": [
+            ["column", "operator", "value"]
+        ],
+        "and": [
+            ["column", "operator", "value"]
+        ]
+    }
+}
+```
+
+Simple filtering
+```json
+{
+    "attr": [
+        ["column", "operator", "value"]
+    ]
+}
+```
+
+Filter with relations
+```json
+{
+    "attr": [
+        ["relation.column", "operator", "value"]
+    ]
+}
+```
+
+### Pagination 📄⏩📄
+Default pagination
+Returns page 1 with a page size of 15
+```json
+{
+    "pagination": {
+    }
+}
+```
+
+Pagination with parameters
+```json
+{
+    "pagination": {
+        "page": 1,
+        "pageSize": 15
+    }
+}
+```
+
 
 ## Best Practices 🏆📚✨
 

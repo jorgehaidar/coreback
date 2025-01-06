@@ -5,12 +5,11 @@ namespace App\Services;
 
 use App\Models\CoreModel;
 use App\Traits\HandlesPagination;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -45,6 +44,18 @@ abstract class CoreService
         return $query;
     }
 
+    /**
+     * Definicion de relaciones
+     *
+     * "relations": "all"
+     * "relations": "relation1"
+     * "relations": "relation1.subrelation"
+     * "relations": ["relation1", "relation2.subrelation", "..."]
+     *
+     * @param Builder $query
+     * @param array|string $relation
+     * @return Builder
+     */
     protected function setRelations(Builder $query, array|string $relation): Builder
     {
         if (is_array($relation)) {
@@ -63,6 +74,18 @@ abstract class CoreService
         return $query;
     }
 
+    /**
+     * Definicion de orden de columna
+     *
+     * "orderBy": {
+     *      "column1": "asc"
+     *      "column2": "desc"
+     * }
+     *
+     * @param Builder $query
+     * @param array $orderBy
+     * @return Builder
+     */
     protected function setOrderBy(Builder $query, array $orderBy): Builder
     {
         foreach ($orderBy as $key => $value) {
@@ -72,6 +95,15 @@ abstract class CoreService
         return $query;
     }
 
+    /**
+     * Definicion de seleccion de columna
+     *
+     * "select": [column1, column2]
+     *
+     * @param Builder $query
+     * @param array $select
+     * @return Builder
+     */
     protected function setSelect(Builder $query, array $select): Builder
     {
         $query->select($select);
@@ -79,6 +111,34 @@ abstract class CoreService
         return $query;
     }
 
+    /**
+     *
+     * Definicion de criterios de busqueda
+     *
+     * Busqueda con operadores
+     * "attr": {
+     *   "or": [
+     *     ["column", "operator", value]
+     *   ],
+     *   "and": [
+     *     ["column", "operator", value]
+     *   ]
+     * }
+     *
+     * Busqueda simple
+     * "attr": [
+     *   ["column", "operator", value]
+     * ]
+     *
+     * Busqueda con relaciones
+     *  "attr": [
+     *    ["relation.column", "operator", value]
+     *  ]
+     *
+     * @param Builder $query
+     * @param array $filters
+     * @return Builder
+     */
     protected function setAttr(Builder $query, array $filters): Builder
     {
         if (!isset($filters['and']) && !isset($filters['or'])) {
@@ -164,6 +224,9 @@ abstract class CoreService
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAll(array $params): Collection|array
     {
         try {
@@ -174,7 +237,7 @@ abstract class CoreService
 
             return $query->get();
         } catch (Throwable $e) {
-            throw new \Exception('Error processing query: ' . $e->getMessage());
+            throw new Exception('Error processing query: ' . $e->getMessage());
         }
     }
 
