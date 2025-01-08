@@ -4,6 +4,7 @@ namespace App\Services\Security;
 
 use App\Models\Security\User;
 use App\Services\CoreService;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class UserService extends CoreService
@@ -15,40 +16,73 @@ class UserService extends CoreService
 
     public function create(array $params): array
     {
-        $result = parent::create($params);
+        return $this->handleUserOperation(fn() => parent::create($params), $params);
+    }
 
-        if ($result['success']){
-            $role = $result['data'];
-            try {
-                $role->roles()->sync($params['roles_id']);
-            } catch (Throwable $e) {
-                return [
-                    'success' => false,
-                    'message' => 'Failed to create resource.',
-                    'errors' => [$e->getMessage()],
-                ];
+    public function update(string $id, array $params): array
+    {
+        return $this->handleUserOperation(fn() => parent::update($id, $params), $params, $id);
+    }
+
+    private function handleUserOperation(callable $operation, array $params, ?string $id = null): array
+    {
+        try {
+            $this->validateParams($params);
+            $result = $operation();
+
+            if ($result['success']) {
+                return $this->syncRoles($result, $params['roles_id'] ?? []);
             }
+
+            return $result;
+        } catch (Throwable $e) {
+            Log::error('User operation failed', [
+                'error' => $e->getMessage(),
+                'user_id' => $id,
+                'params' => $params,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'An error occurred during the operation.',
+                'errors' => [$e->getMessage()],
+            ];
+        }
+    }
+
+    private function syncRoles(array $result, array $rolesId): array
+    {
+        if (empty($rolesId)) {
+            return $result;
+        }
+
+        try {
+            $result['data']->roles()->sync($rolesId);
+            Log::info('Roles synchronized successfully', [
+                'user_id' => $result['data']->id,
+                'roles' => $rolesId,
+            ]);
+        } catch (Throwable $e) {
+            Log::error('Role synchronization failed', [
+                'error' => $e->getMessage(),
+                'user_id' => $result['data']->id,
+                'roles' => $rolesId,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Failed to synchronize roles.',
+                'errors' => [$e->getMessage()],
+            ];
         }
 
         return $result;
     }
 
-    public function update(string $id, array $params): array
+    private function validateParams(array $params): void
     {
-        $result = parent::update($id, $params);
-        if ($result['success'] && $params['roles_id']){
-            $role = $result['data'];
-            try {
-                $role->roles()->sync($params['roles_id']);
-            } catch (Throwable $e) {
-                return [
-                    'success' => false,
-                    'message' => 'Failed to create resource.',
-                    'errors' => [$e->getMessage()],
-                ];
-            }
+        if (isset($params['roles_id']) && !is_array($params['roles_id'])) {
+            throw new \InvalidArgumentException('Roles ID must be an array.');
         }
-
-        return $result;
     }
 }
