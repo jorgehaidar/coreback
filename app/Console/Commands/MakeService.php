@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
@@ -31,7 +32,7 @@ class MakeService extends Command
     protected $description = 'Crea la migracion, archivo para poblar, modelo, controlador, servicio y actualizacion en la api';
 
 
-    private $files;
+    private Filesystem $files;
 
     public function __construct(Filesystem $files)
     {
@@ -41,11 +42,12 @@ class MakeService extends Command
 
     /**
      * Execute the console command.
+     * @throws FileNotFoundException
      */
-    public function handle()
+    public function handle(): void
     {
         $model = Str::studly($this->argument('name'));
-        $this->info("Creando componentes para el servicio: {$model}");
+        $this->info("Creando componentes para el servicio: $model");
 
         if (
             !$this->option('model') &&
@@ -76,15 +78,13 @@ class MakeService extends Command
         if ($this->option('all') || $this->option('seeder'))
             $this->createJsonFile($model);
 
-        $this->info("¡Servicio {$model} creado exitosamente!");
+        $this->info("¡Servicio $model creado exitosamente!");
     }
 
-    private function createMigration($model)
+    private function createMigration($model): void
     {
-        $module = '';
         if (str_contains($model, '/')){
             $explode = explode('/', $model);
-            $module = '\\'.$explode[0];
             $model = $explode[1];
         }
 
@@ -97,16 +97,19 @@ class MakeService extends Command
             '--create' => $tableName,
         ]);
 
-        $this->info("Migración creada: {$migrationName}");
+        $this->info("Migración creada: $migrationName");
     }
 
-    private function createModel($model)
+    /**
+     * @throws FileNotFoundException
+     */
+    private function createModel($model): void
     {
-        $modelPath = app_path("Models/{$model}.php");
+        $modelPath = app_path("Models/$model.php");
         $this->makeDirectory($modelPath);
 
         if ($this->files->exists($modelPath)) {
-            $this->error("El modelo {$model} ya existe.");
+            $this->error("El modelo $model ya existe.");
             return;
         }
 
@@ -119,10 +122,13 @@ class MakeService extends Command
 
         $stub = $this->getStub('model');
         $this->files->put($modelPath, $this->populateStub($stub, $model, $module));
-        $this->info("Modelo creado: {$modelPath}");
+        $this->info("Modelo creado: $modelPath");
     }
 
-    private function createController($model)
+    /**
+     * @throws FileNotFoundException
+     */
+    private function createController($model): void
     {
         $controllerPath = app_path("Http/Controllers/{$model}Controller.php");
         $this->makeDirectory($controllerPath);
@@ -141,10 +147,13 @@ class MakeService extends Command
 
         $stub = $this->getStub('controller');
         $this->files->put($controllerPath, $this->populateStub($stub, $model, $module));
-        $this->info("Controlador creado: {$controllerPath}");
+        $this->info("Controlador creado: $controllerPath");
     }
 
-    private function createService($model)
+    /**
+     * @throws FileNotFoundException
+     */
+    private function createService($model): void
     {
         $servicePath = app_path("Services/{$model}Service.php");
         $this->makeDirectory($servicePath);
@@ -163,10 +172,10 @@ class MakeService extends Command
 
         $stub = $this->getStub('service');
         $this->files->put($servicePath, $this->populateStub($stub, $model, $module));
-        $this->info("Servicio creado: {$servicePath}");
+        $this->info("Servicio creado: $servicePath");
     }
 
-    private function updateApiRoutes($model)
+    private function updateApiRoutes($model): void
     {
         $filePath = base_path('routes/api.php');
 
@@ -185,11 +194,11 @@ class MakeService extends Command
 
         $content = file_get_contents($filePath);
 
-        $newRoute = "\nuse App\Http\Controllers{$module}\\{$model}Controller;";
+        $newRoute = "\nuse App\Http\Controllers$module\\{$model}Controller;";
         $newRoute .= "\nRoute::Resource('" . Str::kebab(Str::plural($model)) . "', {$model}Controller::class);";
 
         if (str_contains($content, $newRoute)) {
-            $this->info("La ruta para {$model} ya existe en api.php.");
+            $this->info("La ruta para $model ya existe en api.php.");
             return;
         }
 
@@ -197,52 +206,52 @@ class MakeService extends Command
 
         file_put_contents($filePath, $content);
 
-        $this->info("Ruta añadida a api.php: {$newRoute}");
+        $this->info("Ruta añadida a api.php: $newRoute");
     }
 
-    private function createJsonFile($model)
+    private function createJsonFile($model): void
     {
-        $module = '';
         if (str_contains($model, '/')){
             $explode = explode('/', $model);
-            $module = '\\'.$explode[0];
             $model = $explode[1];
         }
 
         $tableName = Str::snake(Str::plural($model));
 
         $dataPath = base_path("database/data");
-        $filePath = "{$dataPath}/{$tableName}.json";
+        $filePath = "$dataPath/$tableName.json";
 
         if (!file_exists($dataPath)) {
             mkdir($dataPath, 0755, true);
         }
 
         if (file_exists($filePath)) {
-            $this->info("El archivo JSON para la tabla {$tableName} ya existe: {$filePath}");
+            $this->info("El archivo JSON para la tabla $tableName ya existe: $filePath");
             return;
         }
 
         $data = json_encode([], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         file_put_contents($filePath, $data);
 
-        $this->info("Archivo JSON creado: {$filePath}");
+        $this->info("Archivo JSON creado: $filePath");
     }
 
 
-    private function getStub($type)
+    /**
+     * @throws FileNotFoundException
+     */
+    private function getStub($type): string
     {
-        return $this->files->get(base_path("stubs/{$type}.stub"));
+        return $this->files->get(base_path("stubs/$type.stub"));
     }
 
-    private function populateStub($stub, $model, $module = '')
+    private function populateStub($stub, $model, $module = ''): array|string
     {
         $stub = str_replace('{{ model }}', $model, $stub);
-        $stub = str_replace('{{ module }}', $module, $stub);
-        return $stub;
+        return str_replace('{{ module }}', $module, $stub);
     }
 
-    private function makeDirectory($path)
+    private function makeDirectory($path): void
     {
         $directory = dirname($path);
 
