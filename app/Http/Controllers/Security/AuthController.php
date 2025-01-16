@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\CoreController;
+use App\Http\Requests\LoginRequest;
 use App\Mail\PasswordResetMail;
 use App\Models\Security\User;
 use App\Rules\StrongPassword;
@@ -19,18 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends CoreController
 {
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->validationErrorResponse($validator);
-        }
-
-        $credentials = request(['email', 'password']);
+        $credentials = $request->only('email', 'password');
 
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
