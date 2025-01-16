@@ -1,0 +1,991 @@
+{
+	"info": {
+		"_postman_id": "2279c839-144b-4378-acc0-3e9a627ad46e",
+		"name": "Back Core",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27773877"
+	},
+	"item": [
+		{
+			"name": "Security",
+			"item": [
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is JSON\", function () {\r",
+											"    pm.response.to.have.jsonBody();\r",
+											"});\r",
+											"\r",
+											"const response = pm.response.json();\r",
+											"if (response.access_token) {\r",
+											"    pm.environment.set(\"token\", response.access_token);\r",
+											"    console.log(\"Access token saved to environment:\", response.access_token);\r",
+											"} else {\r",
+											"    console.error(\"Access token not found in response\");\r",
+											"}\r",
+											"\r",
+											"pm.test(\"Access token is present\", function () {\r",
+											"    pm.expect(response).to.have.property(\"access_token\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@backcore.com\",\r\n    \"password\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "me",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/me",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"password_expire_at\": \"2025-03-27\",\r\n    \"verification_token\": \"1234\",\r\n    \"token_expire_at\": \"2025-03-27\",\r\n    \"status\": 0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "refresh",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/refresh",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "change_password",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"old_password\": \"admin\",\r\n    \"new_password\": \"@Requisito1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/change-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "permission",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@fad.cu\",\r\n    \"password\": \"admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/permissions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"permissions"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "request_restore",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"jorge@codestic.net\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/restore-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"restore-password"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "validate_code",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"jorge@codestic.net\",\r\n    \"code\": \"465753\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/validate-code",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"validate-code"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "restore_password_by_hash",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"@Contrasena1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/restore-password/eyJpdiI6IlJUaEFHNjFxaGh0OXNHMExaZi9JNlE9PSIsInZhbHVlIjoib2tZU1ZsVzFLQTBtMjR6UWw2UFo2UT09IiwibWFjIjoiOWJkN2RjNDA0ZmI0ZGYxMGRhNDIxZWI0NGQ5OGZjZTYwOGNlOGYwZjU4NTFjZTJiYTNmMTM1Y2RkZmY1ZDllZiIsInRhZyI6IiJ9",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"restore-password",
+										"eyJpdiI6IlJUaEFHNjFxaGh0OXNHMExaZi9JNlE9PSIsInZhbHVlIjoib2tZU1ZsVzFLQTBtMjR6UWw2UFo2UT09IiwibWFjIjoiOWJkN2RjNDA0ZmI0ZGYxMGRhNDIxZWI0NGQ5OGZjZTYwOGNlOGYwZjU4NTFjZTJiYTNmMTM1Y2RkZmY1ZDllZiIsInRhZyI6IiJ9"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "send_verification_email",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"@Contrasena1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/email/send-verification",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"email",
+										"send-verification"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "verify_email",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/email/verify/3/2ddfd80f8c90a05f0a5ac73b1a35940b1265e0e6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"email",
+										"verify",
+										"3",
+										"2ddfd80f8c90a05f0a5ac73b1a35940b1265e0e6"
+									],
+									"query": [
+										{
+											"key": "user",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "get_user",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"pagination\": {\r\n        \r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get_user_by_id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"relations\": \"roles\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "store_user",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"jorge@codestic.net\",\r\n    \"password\": \"@Requisito1\",\r\n    \"name\": \"jorgito\",\r\n    \"roles_id\": [\r\n        1\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_user",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"@Requisito2\",\r\n    \"roles_id\": [\r\n        2\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete_user",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "role",
+					"item": [
+						{
+							"name": "get_role",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"relations\": \"all\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/roles",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get_role_by_id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/roles/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "store_role",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"test1\",\r\n    \"description\": \"test1\",\r\n    \"active\": \"1\",\r\n    \"routes_id\": [\r\n        1,2,3\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/roles",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_role",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"active\": \"0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/roles/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete_role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2ZhZF9iYWNrL3B1YmxpYy9hcGkvYXV0aC9sb2dpbiIsImlhdCI6MTcxODEzNTg1MywiZXhwIjoxNzE4MTM5NDUzLCJuYmYiOjE3MTgxMzU4NTMsImp0aSI6Ik1VTGl0d2VocG9sUVJldG8iLCJzdWIiOiIxIiwicHJ2IjoiNGU3MDkzOGU3MDhiMzU3YmFkMmE3MGU1ODg4YzE0YzM3Y2E5NzNmZSIsImFkbWluIjp0cnVlLCJwZXJtaXNzaW9ucyI6eyJ1c2VyIjp7Im1lbnVfbW9kdWxlIjoic2VndXJpZGFkIiwibW9kdWxlIjoidXNlciIsImFjdGlvbnMiOlsiaW5kZXgiLCJzdG9yZSIsInNob3ciLCJ1cGRhdGUiLCJkZXN0cm95Il19LCJsb2ciOnsibWVudV9tb2R1bGUiOiJzZWd1cmlkYWQiLCJtb2R1bGUiOiJsb2ciLCJhY3Rpb25zIjpbImluZGV4Il19LCJyb3V0ZSI6eyJtZW51X21vZHVsZSI6InNlZ3VyaWRhZCIsIm1vZHVsZSI6InJvdXRlIiwiYWN0aW9ucyI6WyJpbmRleCIsInVwZGF0ZSJdfSwicm9sZSI6eyJtZW51X21vZHVsZSI6InNlZ3VyaWRhZCIsIm1vZHVsZSI6InJvbGUiLCJhY3Rpb25zIjpbImluZGV4Iiwic3RvcmUiLCJzaG93IiwidXBkYXRlIiwiZGVzdHJveSJdfX19.pqTofIds2YuBTPR6ZCt7u8xw-iZJQnFwftYC-W1gPek",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/roles/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "routes",
+					"item": [
+						{
+							"name": "get_routes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/routes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"routes"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "logs",
+					"item": [
+						{
+							"name": "get_logs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/logs",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"logs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "api_keys",
+					"item": [
+						{
+							"name": "get-api_key",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"relations\": \"roles\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api-keys",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api-keys"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get_by_id-api_key",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"relations\": [\"users\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api-keys/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api-keys",
+										"1"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create_key_by_user",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api-keys/generate/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api-keys",
+										"generate",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "store-api_keys",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"key\": \"\",\r\n    \"user_id\": 1,\r\n    \"status\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api_keys",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api_keys"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update-api_key",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"@Requisito2\",\r\n    \"roles_id\": [\r\n        2\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api-keys/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api-keys",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete-api_keys",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api-keys/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api-keys",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "export",
+					"item": [
+						{
+							"name": "export",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Security\\\\User\": {\r\n        \"columns\": {\r\n            \"id\": \"id prueba\",\r\n            \"name\": \"nombre de usuario\",\r\n            \"roles.name\": \"role\"\r\n        },\r\n        \"ids\": [1,2,3]\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/export",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"export"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://core.local/api"
+		}
+	]
+}
