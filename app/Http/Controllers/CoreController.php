@@ -114,6 +114,7 @@ abstract class CoreController
     public function deleteMultiple(Request $request): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $result = $this->service->deleteMultiple($request->all());
 
             if ($result['success']) {
