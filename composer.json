@@ -1,10 +1,30 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
-    "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "type": "library",
+    "description": "A powerful and modular backend core to kickstart your projects with essential functionalities. Includes authentication, role management, database utilities, and more, all designed to save development time and ensure best practices.",
+    "keywords": [
+        "laravel",
+        "backend",
+        "core",
+        "starter",
+        "authentication",
+        "role-management",
+        "database",
+        "utilities",
+        "scaffolding",
+        "boilerplate",
+        "foundation"
+    ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Jorge Haidar",
+            "email": "jorgehaidarmtnez@gmail.com",
+            "homepage": "https://github.com/jorgehaidar",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^8.3",
         "laravel/framework": "^11.31",
