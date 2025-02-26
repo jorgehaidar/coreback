@@ -19,7 +19,7 @@ class AccessControl
     {
         /** @var User $user */
         $user = Auth::user();
-        $currentRoute = $request->path();
+        $currentRoute = $request->route()->uri;
         $currentMethod = $request->method() === 'PATCH' ? 'PUT' : $request->method();
 
         if (!$user->hasAccessToRoute($currentRoute, $currentMethod)){
