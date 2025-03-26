@@ -276,6 +276,8 @@ abstract class CoreService
             ];
         }
 
+        $this->modelClass = $model;
+
         $validationResult = $this->modelValidator($params, 'update');
         if (!$validationResult['success']) {
             return $validationResult;
