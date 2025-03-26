@@ -8,6 +8,7 @@ use App\Models\Security\RoleUser;
 use App\Models\Security\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -34,6 +35,24 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call([PermissionSeeder::class]);
+
+        if (env('DB_CONNECTION') === 'pgsql'){
+            DB::transaction(function () {
+                $sequences = DB::table('information_schema.columns')
+                    ->select('table_name', 'column_name')
+                    ->where('column_default', 'LIKE', 'nextval%')
+                    ->get();
+
+                foreach ($sequences as $sequence) {
+                    $maxId = DB::table($sequence->table_name)
+                        ->max($sequence->column_name);
+
+                    if ($maxId !== null) {
+                        DB::statement("SELECT setval(pg_get_serial_sequence(?, ?), ?)", [$sequence->table_name, $sequence->column_name, $maxId]);
+                    }
+                }
+            });
+        }
 
         $totalExecutionTime = round((microtime(true) - $totalStartTime) * 1000, 2);
         $this->command->info("<fg=green>  Total seeding time: {$totalExecutionTime} ms</>");
