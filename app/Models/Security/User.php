@@ -125,7 +125,7 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
     {
         $permissions = $this->roles()
             ->with('routes')->whereHas('routes', function ($relationQuery) {
-                $relationQuery->where('active', '=', true);
+                $relationQuery->where('active', '=', true)->whereNotIn('module', ['ApiKey', 'ErrorLog', 'Log', 'RateLimitBlock', 'Auth', 'EmailVerification', 'Export']);
             })
             ->get()
             ->flatMap(function ($role) {
