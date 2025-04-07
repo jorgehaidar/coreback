@@ -2,6 +2,7 @@
 
 namespace App\Models\Security;
 
+use App\Casts\File;
 use App\Models\CoreModel;
 use App\Notifications\CustomVerifyEmail;
 use App\Rules\StrongPassword;
@@ -41,6 +42,7 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
         'name',
         'email',
         'password',
+        'profile_img'
     ];
 
     protected $hidden = [
@@ -68,6 +70,7 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
     protected function casts(): array
     {
         return [
+            'profile_img' => File::class,
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
@@ -80,11 +83,13 @@ class User extends CoreModel implements JWTSubject, CanResetPasswordContract,
                 'name' => 'required|string',
                 'email' => 'required|email|max:255|unique:users,email',
                 'password' => ['required', new StrongPassword()],
+                'profile_img' => 'nullable|image'
             ],
             'update' => [
                 'name' => 'required|string',
                 'email' => 'required|email|max:255|unique:users,email,'.$this->id,
                 'password' => ['required', new StrongPassword()],
+                'profile_img' => 'nullable|image'
             ],
         ];
 
