@@ -24,7 +24,7 @@ Route::group([
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth.control']);
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('refresh', [AuthController::class, 'refresh'])->withoutMiddleware(['auth.control']);
     Route::post('me', [AuthController::class, 'me']);
     Route::post('permissions', [AuthController::class, 'getPermissions']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
