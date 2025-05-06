@@ -17,7 +17,7 @@ class AuthControl
     {
         if (!auth()->check())
             return response()->json([
-                'message' => 'Unauthenticated'
+                'message' => __('auth.unauthenticated')
             ], Response::HTTP_FORBIDDEN);
 
         return $next($request);

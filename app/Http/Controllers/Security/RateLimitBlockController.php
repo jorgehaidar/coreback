@@ -6,7 +6,7 @@ use App\Http\Controllers\CoreController;
 use App\Models\Security\RateLimitBlock;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 
 class RateLimitBlockController extends CoreController
 {
@@ -29,13 +29,13 @@ class RateLimitBlockController extends CoreController
 
             return response()->json([
                 'success' => true,
-                'message' => "Block for {$id} has been removed.",
+                'message' => __('services.resource.block_removed', ['id' => $id]),
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => "No block found for {$id}.",
+            'message' => __('services.resource.no_block_found', ['id' => $id]),
         ], 404);
     }
 }

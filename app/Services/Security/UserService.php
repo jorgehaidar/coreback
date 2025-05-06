@@ -44,7 +44,7 @@ class UserService extends CoreService
 
             return [
                 'success' => false,
-                'message' => 'An error occurred during the operation.',
+                'message' => __('services.resource.operation_failed'),
                 'errors' => [$e->getMessage()],
             ];
         }
@@ -71,7 +71,7 @@ class UserService extends CoreService
 
             return [
                 'success' => false,
-                'message' => 'Failed to synchronize roles.',
+                'message' => __('services.resource.role_sync_failed'),
                 'errors' => [$e->getMessage()],
             ];
         }
@@ -82,7 +82,7 @@ class UserService extends CoreService
     private function validateParams(array $params): void
     {
         if (isset($params['roles_id']) && !is_array($params['roles_id'])) {
-            throw new \InvalidArgumentException('Roles ID must be an array.');
+            throw new \InvalidArgumentException(__('services.resource.roles_id_must_be_array'));
         }
     }
 }

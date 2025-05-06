@@ -33,13 +33,13 @@ class ApiKeyService extends CoreService
 
             return [
                 'success' => true,
-                'message' => 'Resource created successfully.',
+                'message' => __('services.resource.created'),
                 'data' => $result['data'],
             ];
         } catch (Throwable $e) {
             return [
                 'success' => false,
-                'message' => 'Failed to create resource.',
+                'message' => __('services.resource.server_error'),
                 'errors' => [$e->getMessage()],
             ];
         }

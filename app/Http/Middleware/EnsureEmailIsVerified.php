@@ -16,7 +16,7 @@ class EnsureEmailIsVerified
     public function handle(Request $request, Closure $next): Response
     {
         if (!$request->user() || !$request->user()->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Your email address is not verified.'], Response::HTTP_FORBIDDEN);
+            return response()->json(['message' => __('auth.email_not_verified')], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);

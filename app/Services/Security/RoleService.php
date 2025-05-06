@@ -24,7 +24,7 @@ class RoleService extends CoreService
             } catch (Throwable $e) {
                 return [
                     'success' => false,
-                    'message' => 'Failed to create resource.',
+                    'message' => __('services.failed'),
                     'errors' => [$e->getMessage()],
                 ];
             }
@@ -44,7 +44,7 @@ class RoleService extends CoreService
             } catch (Throwable $e) {
                 return [
                     'success' => false,
-                    'message' => 'Failed to create resource.',
+                    'message' => __('services.failed'),
                     'errors' => [$e->getMessage()],
                 ];
             }

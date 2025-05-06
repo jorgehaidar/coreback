@@ -25,7 +25,7 @@ class AuthController extends CoreController
         $credentials = $request->only('email', 'password');
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => __('auth.unauthorized')], 401);
         }
 
         LogService::createLoginLogout('Login');
@@ -47,7 +47,7 @@ class AuthController extends CoreController
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => __('auth.logout_success')]);
     }
     public function refresh(): JsonResponse
     {
@@ -66,6 +66,8 @@ class AuthController extends CoreController
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'new_password' => ['required', new StrongPassword(), 'different:old_password'],
+        ],[
+            'new_password.different' => __('auth.password.same_password')
         ]);
 
         if ($validator->fails()) {
@@ -77,7 +79,7 @@ class AuthController extends CoreController
         if (!Hash::check($request->input('old_password'), $user->getAuthPassword())) {
             return response()->json([
                 'success' => false,
-                'message' => 'Old password does not match our records.',
+                'message' => __('auth.password.mismatch'),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -86,13 +88,13 @@ class AuthController extends CoreController
         if (!$user->save()) {
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while updating the password.',
+                'message' => __('auth.password.update_error'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Password updated successfully.',
+            'message' => __('auth.password.update_success'),
         ], Response::HTTP_OK);
     }
     public function sendRecoveryEmail(Request $request): JsonResponse
@@ -120,7 +122,7 @@ class AuthController extends CoreController
 
         return response()->json([
             'success' => true,
-            'message' => 'Recovery email sent successfully.',
+            'message' => __('auth.recovery.email_sent'),
         ], Response::HTTP_OK);
     }
 
@@ -143,7 +145,7 @@ class AuthController extends CoreController
         if (!$resetToken) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid verification code.',
+                'message' => __('auth.recovery.invalid_code'),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -155,7 +157,7 @@ class AuthController extends CoreController
 
         return response()->json([
             'success' => true,
-            'message' => 'Code validated successfully.',
+            'message' => __('auth.recovery.code_validated'),
             'data' => $encryptedId,
         ], Response::HTTP_OK);
     }
@@ -179,20 +181,20 @@ class AuthController extends CoreController
         if (!$updated) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error while updating password.',
+                'message' => __('auth.password.update_error'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Password updated successfully.',
+            'message' => __('auth.password.update_success'),
         ], Response::HTTP_OK);
     }
     private function validationErrorResponse($validator): JsonResponse
     {
         return response()->json([
             'success' => false,
-            'message' => 'Validation error.',
+            'message' => __('auth.validation_error'),
             'errors' => $validator->errors(),
         ], Response::HTTP_BAD_REQUEST);
     }

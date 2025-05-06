@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Models\CoreModel;
 use App\Traits\HandlesPagination;
 use Exception;
@@ -16,7 +15,6 @@ use Throwable;
 
 abstract class CoreService
 {
-
     use HandlesPagination;
 
     protected CoreModel $modelClass;
@@ -44,48 +42,21 @@ abstract class CoreService
         return $query;
     }
 
-    /**
-     * Definicion de relaciones
-     *
-     * "relations": "all"
-     * "relations": "relation1"
-     * "relations": "relation1.subrelation"
-     * "relations": ["relation1", "relation2.subrelation", "..."]
-     *
-     * @param Builder $query
-     * @param array|string $relation
-     * @return Builder
-     */
     protected function setRelations(Builder $query, array|string $relation): Builder
     {
         if (is_array($relation)) {
             foreach ($relation as $relationItem) {
                 $query->with($relationItem);
             }
-        }
-        elseif ($relation === 'all'){
+        } elseif ($relation === 'all') {
             $query->with($this->modelClass->getRelations());
-        }
-        else
-        {
+        } else {
             $query->with($relation);
         }
 
         return $query;
     }
 
-    /**
-     * Definicion de orden de columna
-     *
-     * "orderBy": {
-     *      "column1": "asc"
-     *      "column2": "desc"
-     * }
-     *
-     * @param Builder $query
-     * @param array $orderBy
-     * @return Builder
-     */
     protected function setOrderBy(Builder $query, array $orderBy): Builder
     {
         foreach ($orderBy as $key => $value) {
@@ -95,50 +66,12 @@ abstract class CoreService
         return $query;
     }
 
-    /**
-     * Definicion de seleccion de columna
-     *
-     * "select": [column1, column2]
-     *
-     * @param Builder $query
-     * @param array $select
-     * @return Builder
-     */
     protected function setSelect(Builder $query, array $select): Builder
     {
         $query->select($select);
-
         return $query;
     }
 
-    /**
-     *
-     * Definicion de criterios de busqueda
-     *
-     * Busqueda con operadores
-     * "attr": {
-     *   "or": [
-     *     ["column", "operator", value]
-     *   ],
-     *   "and": [
-     *     ["column", "operator", value]
-     *   ]
-     * }
-     *
-     * Busqueda simple
-     * "attr": [
-     *   ["column", "operator", value]
-     * ]
-     *
-     * Busqueda con relaciones
-     *  "attr": [
-     *    ["relation.column", "operator", value]
-     *  ]
-     *
-     * @param Builder $query
-     * @param array $filters
-     * @return Builder
-     */
     protected function setAttr(Builder $query, array $filters): Builder
     {
         if (!isset($filters['and']) && !isset($filters['or'])) {
@@ -193,51 +126,52 @@ abstract class CoreService
         try {
             $query = $this->processRequest($params);
             $model = $query->find($id);
+
             if (!$model) {
                 return [
                     'success' => false,
-                    'message' => 'Resource not found.',
+                    'message' => __('services.resource.not_found'),
                     'status' => Response::HTTP_NOT_FOUND
                 ];
             }
 
             return [
                 'success' => true,
-                'message' => $this->modelClass->getTable().' retrieved successfully.',
+                'message' => __('services.resource.retrieved', [
+                    'model' => __('models.models.' . $this->modelClass->getTable())
+                ]),
                 'data' => $model,
                 'status' => Response::HTTP_OK
             ];
         } catch (ModelNotFoundException $e) {
             return [
                 'success' => false,
-                'message' => $this->modelClass->getTable().' not found.',
+                'message' => __('services.resource.not_found'),
                 'errors' => [$e->getMessage()],
                 'status' => Response::HTTP_NOT_FOUND,
             ];
         } catch (Throwable $e) {
             return [
                 'success' => false,
-                'message' => 'An error occurred while retrieving the resource.',
+                'message' => __('services.resource.server_error'),
                 'errors' => [$e->getMessage()],
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR
             ];
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function getAll(array $params): Collection|array
     {
         try {
             $query = $this->processRequest($params);
 
-            if (isset($params['pagination']))
+            if (isset($params['pagination'])) {
                 return $this->applyPagination($query, $params['pagination']);
+            }
 
             return $query->get();
         } catch (Throwable $e) {
-            throw new Exception('Error processing query: ' . $e->getMessage());
+            throw new Exception(__('services.resource.query_error') . $e->getMessage());
         }
     }
 
@@ -245,6 +179,7 @@ abstract class CoreService
     {
         $result = $this->modelValidator($params);
         if (!$result['success']) {
+            $result['message'] = __('services.resource.validation_error');
             return $result;
         }
 
@@ -253,13 +188,13 @@ abstract class CoreService
 
             return [
                 'success' => true,
-                'message' => 'Resource created successfully.',
-                'data' => $model,
+                'message' => __('services.resource.created'),
+                'data' => $model->fresh(),
             ];
         } catch (Throwable $e) {
             return [
                 'success' => false,
-                'message' => 'Failed to create resource.',
+                'message' => __('services.resource.server_error'),
                 'errors' => [$e->getMessage()],
             ];
         }
@@ -267,41 +202,34 @@ abstract class CoreService
 
     public function update(string $id, array $params): array
     {
-        /** @var CoreModel $model */
         $model = $this->modelClass::find($id);
         if (!$model) {
             return [
                 'success' => false,
-                'message' => 'Resource not found.',
+                'message' => __('services.resource.not_found'),
             ];
         }
 
-        $this->modelClass = $model;
-
         $validationResult = $this->modelValidator($params, 'update');
         if (!$validationResult['success']) {
+            $validationResult['message'] = __('services.resource.validation_error');
             return $validationResult;
         }
 
         try {
             $updated = $model->update($params);
 
-            if (!$updated) {
-                return [
-                    'success' => false,
-                    'message' => 'Failed to update resource.',
-                ];
-            }
-
             return [
-                'success' => true,
-                'message' => 'Resource updated successfully.',
-                'data' => $model,
+                'success' => $updated,
+                'message' => $updated
+                    ? __('services.resource.updated')
+                    : __('services.resource.update_failed'),
+                'data' => $model->fresh(),
             ];
         } catch (Throwable $e) {
             return [
                 'success' => false,
-                'message' => 'Failed to update resource.',
+                'message' => __('services.resource.server_error'),
                 'errors' => [$e->getMessage()],
             ];
         }
@@ -314,38 +242,40 @@ abstract class CoreService
             if (!$model) {
                 return [
                     'success' => false,
-                    'message' => $this->modelClass->getTable() . ' not found.',
+                    'message' => __('services.resource.not_found'),
                     'status' => Response::HTTP_NOT_FOUND
                 ];
             }
 
             $deleted = $model->delete();
 
-            if (!$deleted) {
-                return [
-                    'success' => false,
-                    'message' => 'Error while deleting ' . $this->modelClass->getTable() . '.',
-                    'status' => Response::HTTP_INTERNAL_SERVER_ERROR
-                ];
-            }
-
             return [
-                'success' => true,
-                'message' => $this->modelClass->getTable() . ' deleted successfully.',
+                'success' => $deleted,
+                'message' => $deleted
+                    ? __('services.resource.deleted', [
+                        'model' => __('models.models.' . $this->modelClass->getTable())
+                    ])
+                    : __('services.resource.delete_error', [
+                        'model' => __('models.models.' . $this->modelClass->getTable())
+                    ]),
                 'data' => ['id' => $model->id],
-                'status' => Response::HTTP_OK
+                'status' => $deleted ? Response::HTTP_OK : Response::HTTP_INTERNAL_SERVER_ERROR
             ];
         } catch (QueryException $e) {
             return [
                 'success' => false,
-                'message' => 'Error while deleting ' . $this->modelClass->getTable() . '.',
+                'message' => str_contains($e->getMessage(), 'foreign key constraint')
+                    ? __('services.resource.delete_relation_error')
+                    : __('services.resource.delete_error', [
+                        'model' => __('models.models.' . $this->modelClass->getTable())
+                    ]),
                 'errors' => [$e->getMessage()],
                 'status' => Response::HTTP_BAD_REQUEST
             ];
         } catch (Throwable $e) {
             return [
                 'success' => false,
-                'message' => 'An error occurred while deleting the resource.',
+                'message' => __('services.resource.server_error'),
                 'errors' => [$e->getMessage()],
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR
             ];
@@ -362,7 +292,7 @@ abstract class CoreService
         if ($validator->fails()) {
             return [
                 'success' => false,
-                'message' => 'Data validation error.',
+                'message' => __('services.resource.validation_error'),
                 'errors' => $validator->errors(),
                 'status' => Response::HTTP_UNPROCESSABLE_ENTITY
             ];
@@ -371,24 +301,20 @@ abstract class CoreService
         try {
             $deleted = $this->modelClass::destroy($params['ids']);
 
-            if (!$deleted) {
-                return [
-                    'success' => false,
-                    'message' => 'Error while deleting records from ' . $this->modelClass->getTable() . '.',
-                    'status' => Response::HTTP_INTERNAL_SERVER_ERROR
-                ];
-            }
-
             return [
-                'success' => true,
-                'message' => 'Records deleted successfully.',
+                'success' => (bool)$deleted,
+                'message' => $deleted
+                    ? __('services.resource.delete_multiple_success')
+                    : __('services.resource.delete_error', [
+                        'model' => __('models.models.' . $this->modelClass->getTable())
+                    ]),
                 'data' => ['deleted_count' => $deleted],
-                'status' => Response::HTTP_OK
+                'status' => $deleted ? Response::HTTP_OK : Response::HTTP_INTERNAL_SERVER_ERROR
             ];
         } catch (Throwable $e) {
             return [
                 'success' => false,
-                'message' => 'An error occurred while deleting the resources.',
+                'message' => __('services.resource.server_error'),
                 'errors' => [$e->getMessage()],
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR
             ];
@@ -402,7 +328,7 @@ abstract class CoreService
         if ($validator->fails()) {
             return [
                 'success' => false,
-                'message' => 'Data validation error',
+                'message' => __('services.resource.validation_error'),
                 'errors' => $validator->errors(),
             ];
         }

@@ -35,7 +35,7 @@ class ApiKeyController extends CoreController
 
             return response()->json([
                 'success' => false,
-                'message' => 'Internal Server Error.',
+                'message' => __('services.resource.server_error'),
                 'errors' => [$e->getMessage()],
             ], 500);
         }

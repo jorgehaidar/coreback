@@ -24,7 +24,7 @@ class AccessControl
 
         if (!$user->hasAccessToRoute($currentRoute, $currentMethod)){
             return response()->json([
-                'error' => 'You do not have access to route',
+                'error' => __('services.resource.access_denied'),
             ], RESPONSE::HTTP_FORBIDDEN);
         }
 

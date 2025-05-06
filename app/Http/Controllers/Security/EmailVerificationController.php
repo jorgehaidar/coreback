@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Security;
 
-
 use App\Models\Security\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
@@ -19,12 +18,12 @@ class EmailVerificationController extends Controller
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email is already verified.']);
+            return response()->json(['message' => __('auth.email_already_verified')]);
         }
 
         $user->sendEmailVerificationNotification();
 
-        return response()->json(['message' => 'Verification email sent.']);
+        return response()->json(['message' => __('auth.verification_email_sent')]);
     }
 
     public function verifyEmail(Request $request): JsonResponse
@@ -33,21 +32,25 @@ class EmailVerificationController extends Controller
         $user = Auth::user();
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email is already verified.']);
+            return response()->json(['message' => __('auth.email_already_verified')]);
         }
 
         if ($request->route('id') != $user->getKey()) {
-            return response()->json(['message' => 'Invalid user ID.'], Response::HTTP_FORBIDDEN);
+            return response()->json([
+                'message' => __('auth.invalid_user_id')
+            ], Response::HTTP_FORBIDDEN);
         }
 
         if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
-            return response()->json(['message' => 'Invalid verification link.'], Response::HTTP_FORBIDDEN);
+            return response()->json([
+                'message' => __('auth.invalid_verification_link')
+            ], Response::HTTP_FORBIDDEN);
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return response()->json(['message' => 'Email successfully verified.']);
+        return response()->json(['message' => __('auth.verify_email_success')]);
     }
 }

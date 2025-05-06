@@ -26,7 +26,7 @@ class ApiKeyMiddleware
             $keyRecord = ApiKey::where('key', $apiKey)->where('status', true)->first();
 
             if (!$keyRecord) {
-                return response()->json(['message' => 'Unauthorized'], 401);
+                return response()->json(['message' => __('auth.unauthorized')], 401);
             }
 
             $user = $keyRecord->users;

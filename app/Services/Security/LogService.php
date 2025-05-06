@@ -6,6 +6,7 @@ use App\Services\CoreService;
 use App\Models\Security\Log;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Lang;
 
 class LogService extends CoreService
 {
@@ -14,7 +15,10 @@ class LogService extends CoreService
         $this->modelClass = resolve(Log::class);
     }
 
-    static public function createLoginLogout($action)
+    /**
+     * Crea un log de login/logout
+     */
+    public static function createLoginLogout($action)
     {
         $model = Log::create([
             'user_id' => auth()->check() ? auth()->user()->id : 1,
@@ -25,16 +29,19 @@ class LogService extends CoreService
             'table_name' => 'User',
         ]);
 
-        if (!$model){
+        if (!$model) {
             return response()->json([
-                'message' => 'Error while creating Log'
+                'message' => __('services.resource.log_create_error'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return true;
     }
 
-    static public function createAny($action, $table_name, $record)
+    /**
+     * Crea un log general
+     */
+    public static function createAny($action, $table_name, $record)
     {
         $model = Log::create([
             'user_id' => auth()->check() ? auth()->user()->id : null,
@@ -45,9 +52,9 @@ class LogService extends CoreService
             'table_name' => $table_name,
         ]);
 
-        if (!$model){
+        if (!$model) {
             return response()->json([
-                'message' => 'Error while creating Log'
+                'message' => __('services.resource.log_create_error'),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
