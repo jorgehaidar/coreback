@@ -2,10 +2,10 @@
 
 namespace App\Models\Security;
 
-use App\Models\CoreModel;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Random\RandomException;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Mbox\BackCore\Models\CoreModel;
+use Random\RandomException;
 
 class ApiKey extends CoreModel
 {

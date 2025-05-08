@@ -3,7 +3,7 @@
 namespace App\Services\Security;
 
 use App\Models\Security\ErrorLog;
-use App\Services\CoreService;
+use Mbox\BackCore\Services\CoreService;
 
 class ErrorLogService extends CoreService
 {

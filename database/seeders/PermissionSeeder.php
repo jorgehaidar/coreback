@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Security\Permission;
-use App\Models\Security\Route;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Mbox\BackCore\Models\Security\Route;
 
 class PermissionSeeder extends Seeder
 {

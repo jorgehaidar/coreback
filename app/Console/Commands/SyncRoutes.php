@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Security\Route;
 use Illuminate\Console\Command;
 use \Illuminate\Support\Facades\Route as SystemRoutes;
+use Mbox\BackCore\Models\Security\Route;
 
 class SyncRoutes extends Command
 {

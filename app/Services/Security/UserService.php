@@ -3,7 +3,7 @@
 namespace App\Services\Security;
 
 use App\Models\Security\User;
-use App\Services\CoreService;
+use Mbox\BackCore\Services\CoreService;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 

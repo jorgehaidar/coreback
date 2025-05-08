@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Security;
 
-use App\Http\Controllers\CoreController;
+use Mbox\BackCore\Controllers\CoreController;
 use App\Services\Security\RoleService;
 
 class RoleController extends CoreController

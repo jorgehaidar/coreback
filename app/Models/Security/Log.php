@@ -2,7 +2,7 @@
 
 namespace App\Models\Security;
 
-use App\Models\CoreModel;
+use Mbox\BackCore\Models\CoreModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Log extends CoreModel

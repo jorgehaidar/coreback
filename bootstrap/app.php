@@ -1,14 +1,13 @@
 <?php
 
-use App\Exceptions\Handler;
-use App\Http\Middleware\AccessControl;
-use App\Http\Middleware\ApiKeyMiddleware;
-use App\Http\Middleware\AuthControl;
-use App\Http\Middleware\EnsureEmailIsVerified;
-use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Mbox\BackCore\Middleware\AccessControl;
+use Mbox\BackCore\Middleware\ApiKeyMiddleware;
+use Mbox\BackCore\Middleware\AuthControl;
+use Mbox\BackCore\Middleware\EnsureEmailIsVerified;
+use Mbox\BackCore\Middleware\SecurityHeaders;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(

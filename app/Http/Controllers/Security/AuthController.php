@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Security;
 
-use App\Http\Controllers\CoreController;
 use App\Http\Requests\LoginRequest;
 use App\Mail\PasswordResetMail;
 use App\Models\Security\User;
-use App\Rules\StrongPassword;
 use App\Services\Security\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -16,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Mbox\BackCore\Controllers\CoreController;
+use Mbox\BackCore\Rules\StrongPassword;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends CoreController

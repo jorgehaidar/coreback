@@ -2,7 +2,7 @@
 
 namespace App\Services\Security;
 
-use App\Services\CoreService;
+use Mbox\BackCore\Services\CoreService;
 use App\Models\Security\Log;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response;

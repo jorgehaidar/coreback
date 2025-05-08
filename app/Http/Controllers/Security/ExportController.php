@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Security;
 
-use App\Exports\ModelExport;
-use App\Http\Controllers\CoreController;
+use Mbox\BackCore\Controllers\CoreController;
 use App\Models\Security\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Mbox\BackCore\Exports\ModelExport;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExportController extends CoreController

@@ -4,7 +4,7 @@ namespace App\Services\Security;
 
 use App\Models\Security\ApiKey;
 use App\Models\Security\User;
-use App\Services\CoreService;
+use Mbox\BackCore\Services\CoreService;
 use Throwable;
 
 class ApiKeyService extends CoreService

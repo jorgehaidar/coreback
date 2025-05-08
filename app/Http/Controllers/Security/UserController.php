@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Security;
 
-use App\Http\Controllers\CoreController;
+use Mbox\BackCore\Controllers\CoreController;
 use App\Models\Security\User;
 use App\Services\Security\UserService;
 

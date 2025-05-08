@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Security;
 
-use App\Http\Controllers\CoreController;
+use Mbox\BackCore\Controllers\CoreController;
 use App\Models\Security\RateLimitBlock;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

@@ -11,19 +11,7 @@
 
 ### Tareas:
 
-- ~~login~~
-- ~~logout~~
-- ~~me~~
-- ~~verificacion de admin~~
-- ~~obtencion de permisos~~
-- ~~cambiar contrasena~~
-- ~~restaurar contrasenna~~
-- ~~verificacion por email~~
-- ~~crear apikey~~
-- ~~Creacion del control de errores y envio por email al admin~~
-- ~~exportar~~
 - importar
-- crear el readme dev
 
 ### Variables de entorno
 #### 1-Crear un fichero `.env` a partir del fichero `env.environment` con los mismos datos

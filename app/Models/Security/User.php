@@ -3,9 +3,8 @@
 namespace App\Models\Security;
 
 use App\Casts\File;
-use App\Models\CoreModel;
+use Mbox\BackCore\Models\CoreModel;
 use App\Notifications\CustomVerifyEmail;
-use App\Rules\StrongPassword;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -16,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use Mbox\BackCore\Rules\StrongPassword;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Auth\Passwords\CanResetPassword;
 

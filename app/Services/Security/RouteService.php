@@ -2,8 +2,8 @@
 
 namespace App\Services\Security;
 
-use App\Services\CoreService;
-use App\Models\Security\Route;
+use Mbox\BackCore\Models\Security\Route;
+use Mbox\BackCore\Services\CoreService;
 
 class RouteService extends CoreService
 {
