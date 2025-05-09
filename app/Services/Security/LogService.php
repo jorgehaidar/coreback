@@ -2,8 +2,8 @@
 
 namespace App\Services\Security;
 
+use Mbox\BackCore\Models\Security\Log;
 use Mbox\BackCore\Services\CoreService;
-use App\Models\Security\Log;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Lang;

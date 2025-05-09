@@ -39,11 +39,11 @@ class AuthController extends CoreController
 
         return $user->getPermissions();
     }
-    public function me()
+    public function me(): JsonResponse
     {
         return response()->json(auth()->user());
     }
-    public function logout()
+    public function logout(): JsonResponse
     {
         auth()->logout();
 
